@@ -34,13 +34,6 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping(path = "/users")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        UserEntity userEntity = userMapper.mapFrom(userDto);
-        UserEntity savedUserEntity = userService.createUser(userEntity);
-        return new ResponseEntity<>(userMapper.mapTo(savedUserEntity), HttpStatus.CREATED);
-    }
-
     @GetMapping(path = "/users/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable("userId") Integer userId) {
         Optional<UserEntity> foundUserEntity = userService.getUserById(userId);
