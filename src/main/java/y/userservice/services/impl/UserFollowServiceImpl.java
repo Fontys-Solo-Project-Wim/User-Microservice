@@ -23,22 +23,22 @@ public class UserFollowServiceImpl implements UserFollowService {
 
     @Override
     public void followUser(UserFollowEntity userFollowEntity) {
-        if(userFollowRepository.isFollowing(userFollowEntity.getId().getFollowerId(), userFollowEntity.getId().getFollowedId())) {
-            throw new FollowerAlreadyFollowingException("User is already following this user.");
-        }
         if(userServiceImpl.getUserById(userFollowEntity.getId().getFollowerId()).isEmpty() || userServiceImpl.getUserById(userFollowEntity.getId().getFollowedId()).isEmpty()) {
             throw new UserDoesNotExistException("User not found.");
+        }
+        if(userFollowRepository.isFollowing(userFollowEntity.getId().getFollowerId(), userFollowEntity.getId().getFollowedId())) {
+            throw new FollowerAlreadyFollowingException("User is already following this user.");
         }
         userFollowRepository.save(userFollowEntity);
     }
 
     @Override
     public void unfollowUser(UserFollowEntity userFollowEntity) {
-        if (!userFollowRepository.isFollowing(userFollowEntity.getId().getFollowerId(), userFollowEntity.getId().getFollowedId())) {
-            throw new FollowerAlreadyUnFollowedException("User is not following this user.");
-        }
         if(userServiceImpl.getUserById(userFollowEntity.getId().getFollowerId()).isEmpty() || userServiceImpl.getUserById(userFollowEntity.getId().getFollowedId()).isEmpty()) {
             throw new UserDoesNotExistException("User not found.");
+        }
+        if (!userFollowRepository.isFollowing(userFollowEntity.getId().getFollowerId(), userFollowEntity.getId().getFollowedId())) {
+            throw new FollowerAlreadyUnFollowedException("User is not following this user.");
         }
         userFollowRepository.deleteById(userFollowEntity.getId());
     }
