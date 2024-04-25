@@ -13,8 +13,8 @@ import java.util.List;
 @Service
 public class UserFollowServiceImpl implements UserFollowService {
 
-    private UserFollowRepository userFollowRepository;
-    private UserServiceImpl userServiceImpl;
+    private final UserFollowRepository userFollowRepository;
+    private final UserServiceImpl userServiceImpl;
 
     public UserFollowServiceImpl(UserFollowRepository userFollowRepository, UserServiceImpl userServiceImpl) {
         this.userFollowRepository = userFollowRepository;
