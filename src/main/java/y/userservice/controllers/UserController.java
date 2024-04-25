@@ -49,7 +49,7 @@ public class UserController {
 
         try{
             userFollowService.followUser(userFollowEntity);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
         }
         catch (FollowerAlreadyFollowingException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User is already following this user.");
@@ -67,7 +67,7 @@ public class UserController {
 
         try{
             userFollowService.unfollowUser(userFollowEntity);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
         catch (FollowerAlreadyUnFollowedException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User is not following this user.");
