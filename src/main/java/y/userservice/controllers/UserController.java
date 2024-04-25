@@ -1,6 +1,5 @@
 package y.userservice.controllers;
 
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,13 +43,13 @@ public class UserController {
     }
 
     @PostMapping(path = "/users/follow")
-    public ResponseEntity followUser(@RequestBody UserFollowDto userFollowDto) {
+    public ResponseEntity<?> followUser(@RequestBody UserFollowDto userFollowDto) {
         UserFollowId userFollowId = new UserFollowId(userFollowDto.getFollowerId(), userFollowDto.getFollowedId());
         UserFollowEntity userFollowEntity = new UserFollowEntity(userFollowId, userFollowDto.getTimestamp());
 
         try{
             userFollowService.followUser(userFollowEntity);
-            return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (FollowerAlreadyFollowingException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User is already following this user.");
@@ -61,14 +60,14 @@ public class UserController {
     }
 
     @PostMapping(path = "/users/unfollow")
-    public ResponseEntity unfollowUser(@RequestBody UserUnfollowDto userUnfollowDto) {
+    public ResponseEntity<?> unfollowUser(@RequestBody UserUnfollowDto userUnfollowDto) {
         UserFollowId userFollowId = new UserFollowId(userUnfollowDto.getFollowerId(), userUnfollowDto.getFollowedId());
         LocalDateTime Time = LocalDateTime.now();
         UserFollowEntity userFollowEntity = new UserFollowEntity(userFollowId, Time);
 
         try{
             userFollowService.unfollowUser(userFollowEntity);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         catch (FollowerAlreadyUnFollowedException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User is not following this user.");
