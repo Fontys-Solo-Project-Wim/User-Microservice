@@ -35,4 +35,4 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Fontys-Solo-Project-Wim_User-Microservice
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Fontys-Solo-Project-Wim_User-Microservice -Dsonar.coverage.exclusions='**/domain/dto/*.java, **/domain/entities/*.java'
