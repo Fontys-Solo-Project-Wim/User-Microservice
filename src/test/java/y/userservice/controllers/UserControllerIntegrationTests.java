@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import static org.mockito.ArgumentMatchers.any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,6 +21,7 @@ import y.userservice.domain.dto.UserFollowDto;
 import y.userservice.domain.dto.UserUnfollowDto;
 import y.userservice.domain.entities.UserEntity;
 import y.userservice.domain.entities.UserFollowEntity;
+import y.userservice.publisher.LogPublisher;
 import y.userservice.services.UserFollowService;
 import y.userservice.services.UserService;
 
@@ -36,6 +40,9 @@ public class UserControllerIntegrationTests {
 
     private final MockMvc mockMvc;
 
+    @MockBean
+    private LogPublisher logPublisher;
+
     @Autowired
     public UserControllerIntegrationTests(UserService userService, UserFollowService userFollowService, ObjectMapper objectMapper, MockMvc mockMvc) {
         this.userService = userService;
@@ -46,6 +53,7 @@ public class UserControllerIntegrationTests {
 
     @BeforeEach
     public void setup() {
+        Mockito.doNothing().when(logPublisher).publishLog(any(String.class));
         UserEntity userEntityA = TestDataUtil.createTestUserEntityA();
         UserEntity userEntityB = TestDataUtil.createTestUserEntityB();
         UserEntity userEntityC = TestDataUtil.createTestUserEntityC();
