@@ -52,4 +52,9 @@ public class UserFollowServiceImpl implements UserFollowService {
     public List<Integer> getFollowing(Integer followerId) {
         return userFollowRepository.getFollowing(followerId);
     }
+
+    @Override
+    public void deleteAllFollowRelationships(Integer userId) {
+        userFollowRepository.deleteAllFollowRelationships(userId);
+    }
 }

@@ -9,4 +9,5 @@ public interface UserFollowService {
     void unfollowUser(UserFollowEntity userFollowEntity);
     List<Integer> getFollowers(Integer userId);
     List<Integer> getFollowing(Integer userId);
+    void deleteAllFollowRelationships(Integer userId);
 }
