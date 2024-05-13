@@ -9,6 +9,7 @@ import y.userservice.services.UserFollowService;
 import y.userservice.repositories.UserFollowRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserFollowServiceImpl implements UserFollowService {
@@ -56,5 +57,21 @@ public class UserFollowServiceImpl implements UserFollowService {
     @Override
     public void deleteAllFollowRelationships(Integer userId) {
         userFollowRepository.deleteAllFollowRelationships(userId);
+    }
+
+    @Override
+    public List<String> getFollowersByUserId(Integer userId) {
+        return userFollowRepository.findAllByFollowedId(userId).stream()
+                .map(userFollowEntity -> userFollowEntity.getId().getFollowerId())
+                .map(userServiceImpl::getDisplayNameById)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getFollowedByUserId(Integer userId) {
+        return userFollowRepository.findAllByFollowerId(userId).stream()
+                .map(userFollowEntity -> userFollowEntity.getId().getFollowedId())
+                .map(userServiceImpl::getDisplayNameById)
+                .collect(Collectors.toList());
     }
 }

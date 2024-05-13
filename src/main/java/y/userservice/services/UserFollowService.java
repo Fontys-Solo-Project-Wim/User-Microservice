@@ -10,4 +10,6 @@ public interface UserFollowService {
     List<Integer> getFollowers(Integer userId);
     List<Integer> getFollowing(Integer userId);
     void deleteAllFollowRelationships(Integer userId);
+    List<String> getFollowersByUserId(Integer userId);
+    List<String> getFollowedByUserId(Integer userId);
 }

@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public String getDisplayNameById(Integer userId) {
+        return userRepository.findById(userId).map(UserEntity::getDisplayName).orElse(null);
+    }
 }

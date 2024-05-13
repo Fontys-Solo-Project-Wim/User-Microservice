@@ -24,4 +24,10 @@ public interface UserFollowRepository extends CrudRepository<UserFollowEntity, U
         @Transactional
         @Query("DELETE FROM UserFollowEntity u WHERE u.id.followerId = ?1 OR u.id.followedId = ?1")
         void deleteAllFollowRelationships(Integer userId);
+
+        @Query("SELECT u FROM UserFollowEntity u WHERE u.id.followerId = ?1")
+        List<UserFollowEntity> findAllByFollowerId(Integer followerId);
+
+        @Query("SELECT u FROM UserFollowEntity u WHERE u.id.followedId = ?1")
+        List<UserFollowEntity> findAllByFollowedId(Integer followedId);
 }

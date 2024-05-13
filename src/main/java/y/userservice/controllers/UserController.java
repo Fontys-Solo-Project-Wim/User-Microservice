@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import y.userservice.domain.dto.UserDataDto;
 import y.userservice.domain.dto.UserDto;
 import y.userservice.domain.dto.UserFollowDto;
 import y.userservice.domain.dto.UserUnfollowDto;
@@ -124,5 +125,36 @@ public class UserController {
         List<Integer> following = userFollowService.getFollowing(userId);
         logPublisher.publishLog("UserController getFollowing response: " + objectMapper.writeValueAsString(following));
         return following;
+    }
+
+    @GetMapping("/users/data/{userId}")
+    public ResponseEntity<UserDataDto> getUserData(@PathVariable Integer userId, @RequestHeader(value = "From-Gateway", required = false) String fromGateway) throws JsonProcessingException {
+        logPublisher.publishLog("UserController getUserData request for userId: " + userId);
+
+        if (!"true".equals(fromGateway)) {
+            logPublisher.publishLog("UserController getUserData unauthorized access attempt due to missing or incorrect header.");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        UserEntity userEntity = userService.getUserById(userId).orElse(null);
+        if (userEntity == null){
+            logPublisher.publishLog("UserController getUserData response: No user found for userId " + userId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<String> followedUsers = userFollowService.getFollowedByUserId(userId);
+        List<String> followers = userFollowService.getFollowersByUserId(userId);
+
+        UserDataDto userDataDto = UserDataDto.builder()
+                .userId(userEntity.getUserId())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .displayName(userEntity.getDisplayName())
+                .followedUsers(followedUsers)
+                .followers(followers)
+                .build();
+
+        logPublisher.publishLog("UserController getUserData response: " + objectMapper.writeValueAsString(userDataDto));
+        return ResponseEntity.ok(userDataDto);
     }
 }
